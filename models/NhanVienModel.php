@@ -65,17 +65,33 @@ class NhanVienModel
     public static function addNhanVien($ten_nv, $phai, $noi_sinh, $ma_phong, $luong)
     {
         $conn = Database::getConnection();
-        $sql = "INSERT INTO NHANVIEN (Ten_NV, Phai, Noi_Sinh, Ma_Phong, Luong) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        if (!$stmt) {
-            die("Lỗi truy vấn: " . $conn->error);
+
+        // Kiểm tra Ma_Phong có tồn tại trong phongban không
+        $stmt_check = $conn->prepare("SELECT COUNT(*) FROM phongban WHERE Ma_Phong = ?");
+        $stmt_check->bind_param("s", $ma_phong);
+        $stmt_check->execute();
+
+        // Gán giá trị cho biến count trước khi fetch
+        $count = 0;
+        $stmt_check->bind_result($count);
+        $stmt_check->fetch();
+        $stmt_check->close();
+
+        if ($count == 0) {
+            die("Lỗi: Mã phòng không hợp lệ.");
         }
 
-        $stmt->bind_param("sssii", $ten_nv, $phai, $noi_sinh, $ma_phong, $luong);
-        $stmt->execute();
+        // Chèn nhân viên nếu mã phòng hợp lệ
+        $stmt = $conn->prepare("INSERT INTO nhanvien (Ten_NV, Phai, Noi_Sinh, Ma_Phong, Luong) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssd", $ten_nv, $phai, $noi_sinh, $ma_phong, $luong);
 
-        $stmt->close();
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            die("Lỗi: " . $stmt->error);
+        }
     }
+
 
     public static function updateNhanVien($ma_nv, $ten_nv, $phai, $noi_sinh, $ma_phong, $luong)
     {

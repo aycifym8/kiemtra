@@ -14,7 +14,7 @@
     <input type="text" name="Noi_Sinh" value="<?= $nhanvien['Noi_Sinh'] ?>" required><br>
 
     <label>Mã phòng:</label>
-    <input type="number" name="Ma_Phong" value="<?= $nhanvien['Ma_Phong'] ?>" required><br>
+    <input type="text" name="Ma_Phong" value="<?= $nhanvien['Ma_Phong'] ?>"><br>
 
     <label>Lương:</label>
     <input type="number" name="Luong" value="<?= $nhanvien['Luong'] ?>" required><br>

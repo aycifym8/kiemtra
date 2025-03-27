@@ -11,8 +11,12 @@
     <label>Nơi sinh:</label>
     <input type="text" name="Noi_Sinh" required><br>
 
-    <label>Mã phòng:</label>
-    <input type="number" name="Ma_Phong" required><br>
+    <select name="Ma_Phong">
+        <option value="KT">Kỹ Thuật</option>
+        <option value="QT">Quản Trị</option>
+        <option value="TC">Tài Chính</option>
+    </select>
+
 
     <label>Lương:</label>
     <input type="number" name="Luong" required><br>
