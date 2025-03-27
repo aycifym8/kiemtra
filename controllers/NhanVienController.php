@@ -8,18 +8,53 @@ class NhanVienController
 {
     public static function index()
     {
-        // Lấy số trang hiện tại, mặc định là 1 nếu không có tham số
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        $limit = 5; // Số nhân viên hiển thị trên mỗi trang
+        $limit = 5;
         $offset = ($page - 1) * $limit;
 
-        // Lấy danh sách nhân viên theo trang
         $nhanvienList = NhanVienModel::getNhanVienByPage($limit, $offset);
-
-        // Lấy tổng số trang để phân trang
         $total_pages = ceil(NhanVienModel::getTotalNhanVien() / $limit);
 
-        // Load view và truyền dữ liệu
         include 'views/nhanvien/index.php';
+    }
+
+    public static function create()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $ten_nv = $_POST['Ten_NV'];
+            $phai = $_POST['Phai'];
+            $noi_sinh = $_POST['Noi_Sinh'];
+            $ma_phong = $_POST['Ma_Phong'];
+            $luong = $_POST['Luong'];
+
+            NhanVienModel::addNhanVien($ten_nv, $phai, $noi_sinh, $ma_phong, $luong);
+            header("Location: index.php?controller=nhanvien");
+            exit();
+        }
+        include 'views/nhanvien/create.php';
+    }
+
+    public static function edit()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $ma_nv = $_POST['Ma_NV'];
+            $ten_nv = $_POST['Ten_NV'];
+            $phai = $_POST['Phai'];
+            $noi_sinh = $_POST['Noi_Sinh'];
+            $ma_phong = $_POST['Ma_Phong'];
+            $luong = $_POST['Luong'];
+
+            NhanVienModel::updateNhanVien($ma_nv, $ten_nv, $phai, $noi_sinh, $ma_phong, $luong);
+            header("Location: index.php");
+        }
+    }
+
+    public static function delete()
+    {
+        if (isset($_GET['id'])) {
+            $ma_nv = $_GET['id'];
+            NhanVienModel::deleteNhanVien($ma_nv);
+            header("Location: index.php");
+        }
     }
 }

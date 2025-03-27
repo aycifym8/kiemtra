@@ -91,6 +91,7 @@
     <button id="toggle-dark-mode">Dark Mode</button>
 
     <h2>THÔNG TIN NHÂN VIÊN</h2>
+    <a href="/kiemtra/nhanvien/create" class="btn">Thêm nhân viên</a>
 
     <table>
         <thead>
@@ -101,6 +102,7 @@
                 <th>Nơi Sinh</th>
                 <th>Tên Phòng</th>
                 <th>Lương</th>
+                <th>Hành động</th>
             </tr>
         </thead>
         <tbody>
@@ -120,6 +122,10 @@
                     <td><?= $row["Noi_Sinh"] ?></td>
                     <td><?= $row["Ten_Phong"] ?></td>
                     <td><?= $row["Luong"] ?></td>
+                    <td>
+                        <a href="/kiemtra/nhanvien/edit?id=<?= $row['Ma_NV'] ?>">Sửa</a> |
+                        <a href="/kiemtra/nhanvien/delete?id=<?= $row['Ma_NV'] ?>" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
