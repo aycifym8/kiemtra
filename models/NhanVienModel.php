@@ -6,29 +6,26 @@ use Config\Database;
 
 class NhanVienModel
 {
-    public static function getNhanVienWithPagination($limit, $offset)
+    public static function getAllNhanVien()
     {
         $conn = Database::getConnection();
-        $query = "SELECT nv.*, p.Ten_Phong 
-                  FROM nhanvien nv
-                  JOIN phongban p ON nv.Ma_Phong = p.Ma_Phong
-                  LIMIT ?, ?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param("ii", $offset, $limit);
-        $stmt->execute();
-        $result = $stmt->get_result();
 
-        $data = [];
-        while ($row = $result->fetch_assoc()) {
-            $data[] = $row;
+        $sql = "SELECT NHANVIEN.*, PHONGBAN.Ten_Phong
+FROM NHANVIEN
+INNER JOIN PHONGBAN ON NHANVIEN.Ma_Phong = PHONGBAN.Ma_Phong";
+
+        $result = $conn->query($sql);
+
+        if (!$result) {
+            die("Lỗi truy vấn SQL: " . $conn->error);
         }
 
-        // Lấy tổng số nhân viên
-        $total_query = "SELECT COUNT(*) AS total FROM nhanvien";
-        $total_result = $conn->query($total_query);
-        $total_row = $total_result->fetch_assoc();
-        $total = $total_row['total'];
+        $nhanvienList = [];
+        while ($row = $result->fetch_assoc()) {
+            $nhanvienList[] = $row;
+        }
 
-        return ["data" => $data, "total" => $total];
+        Database::closeConnection();
+        return $nhanvienList;
     }
 }
